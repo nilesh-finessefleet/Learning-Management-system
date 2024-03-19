@@ -24,7 +24,7 @@ const EditCategories = (props: Props) => {
       setCategories(data.layout?.categories);
     }
     if (layoutSuccess) {
-        refetch();
+      refetch();
       toast.success("Categories updated successfully");
     }
 
@@ -34,7 +34,7 @@ const EditCategories = (props: Props) => {
         toast.error(errorData?.data?.message);
       }
     }
-  }, [data, layoutSuccess, error,refetch]);
+  }, [data, layoutSuccess, error, refetch]);
 
   const handleCategoriesAdd = (id: any, value: string) => {
     setCategories((prevCategory: any) =>
@@ -43,8 +43,7 @@ const EditCategories = (props: Props) => {
   };
 
   const newCategoriesHandler = () => {
-    let len = 0;
-    if (categories[categories.lenght].title === "") {
+    if (categories[categories.length - 1].title === "") {
       toast.error("Category title cannot be empty");
     } else {
       setCategories((prevCategory: any) => [...prevCategory, { title: "" }]);
@@ -79,7 +78,7 @@ const EditCategories = (props: Props) => {
       {isLoading ? (
         <Loader />
       ) : (
-        <div className="mt-[120px] text-center">
+        <div className="w-[90%] pb-12 800px:w-[80%] m-auto mt-[120px] text-center">
           <h1 className={`${styles.title}`}>All Categories</h1>
           {categories &&
             categories.map((item: any, index: number) => {
