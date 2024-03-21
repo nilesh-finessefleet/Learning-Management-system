@@ -64,7 +64,7 @@ const CoursePreview: FC<Props> = ({
           </div>
         </div>
 
-        <div className="flex items-center">
+        {/* <div className="flex items-center">
           <input
             type="text"
             name=""
@@ -77,8 +77,7 @@ const CoursePreview: FC<Props> = ({
           >
             Apply
           </div>
-        </div>
-        <p className="pb-1">• Source code included</p>
+        </div> */}
         <p className="pb-1">• Full lifetime access</p>
         <p className="pb-1">• Certificate of completion</p>
         <p className="pb-3 800px:pb-1">• Premium Support</p>

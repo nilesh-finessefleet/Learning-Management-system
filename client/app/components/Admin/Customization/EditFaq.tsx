@@ -13,7 +13,7 @@ import Loader from "../../Loader/Loader";
 type Props = {};
 
 const EditFaq = (props: Props) => {
-  const { data, isLoading } = useGetHeroDataQuery("FAQ", {
+  const { data, isLoading, refetch } = useGetHeroDataQuery("FAQ", {
     refetchOnMountOrArgChange: true,
   });
   const [editLayout, { isSuccess:layoutSuccess, error }] = useEditLayoutMutation();
@@ -25,7 +25,8 @@ const EditFaq = (props: Props) => {
       setQuestions(data.layout?.faq);
     }
     if(layoutSuccess){
-        toast.success("FAQ updated successfully");
+      refetch();
+      toast.success("FAQ updated successfully");
     }
 
     if(error){
@@ -34,7 +35,7 @@ const EditFaq = (props: Props) => {
             toast.error(errorData?.data?.message);
           }
     }
-  }, [data,layoutSuccess,error]);
+  }, [data,layoutSuccess,error, refetch]);
 
   const toggleQuestion = (id: any) => {
     setQuestions((prevQuestions) =>

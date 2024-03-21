@@ -7,40 +7,45 @@ type Props = {
 };
 
 const CoursePlayer: FC<Props> = ({ videoUrl }) => {
-  const [videoData, setVideoData] = useState({
-    otp: "",
-    playbackInfo: "",
-  });
+  // const [videoData, setVideoData] = useState({
+  //   otp: "",
+  //   playbackInfo: "",
+  // });
 
-  useEffect(() => {
-    axios
-      .post(`${process.env.NEXT_PUBLIC_SERVER_URI}getVdoCipherOTP`, {
-        videoId: videoUrl,
-      })
-      .then((res) => {
-        setVideoData(res.data);
-      });
-  }, [videoUrl]);
+  // useEffect(() => {
+  //   axios
+  //     .post(`${process.env.NEXT_PUBLIC_SERVER_URI}getVdoCipherOTP`, {
+  //       videoId: videoUrl,
+  //     })
+  //     .then((res) => {
+  //       setVideoData(res.data);
+  //     });
+  // }, [videoUrl]);
+
+  function videoUrlId(){      
+    if (!videoUrl) return;
+    let youtubeId ="";
+    if(videoUrl.length> 11){
+      const linkArray = videoUrl.toString().split('be/');
+      youtubeId = linkArray[1];
+    }else{
+      youtubeId = videoUrl;
+    }
+    
+    return youtubeId;
+  }
+
+  let p1 = `http://www.youtube-nocookie.com/embed/${videoUrlId()}`;    
+  let p2 = "?rel=0";  
+
+
 
   return (
     <div
-      style={{ position: "relative", paddingTop: "56.25%", overflow: "hidden" }}
+      style={{ position: "relative", overflow: "hidden" }}
     >
-      {videoData.otp && videoData.playbackInfo !== "" && (
-        <iframe
-          src={`https://player.vdocipher.com/v2/?otp=${videoData?.otp}&playbackInfo=${videoData.playbackInfo}&player=3thUX4gz2Z2U5DvN`}
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            border: 0,
-          }}
-          allowFullScreen={true}
-          allow="encrypted-media"
-        ></iframe>
-      )}
+      <iframe width={"540"} height={"350"} src={p1 + p2} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope;" allowFullScreen ></iframe>
+      
     </div>
   );
 };
