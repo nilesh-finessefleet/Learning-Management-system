@@ -2,12 +2,22 @@ import mongoose, {Document,Model,Schema} from "mongoose";
 
 
 export interface IOrder extends Document{
+    isPaid: boolean
     courseId: string;
     userId?:string;
-    payment_info: object;
+    amount: number;
+    razorpay: {
+        orderId: String,
+        paymentId: String,
+        signature: String,
+    };
 }
 
 const orderSchema = new Schema<IOrder>({
+    isPaid: {
+     type: Boolean,
+     required: true
+    },
     courseId: {
      type: String,
      required: true
@@ -16,9 +26,14 @@ const orderSchema = new Schema<IOrder>({
         type: String,
         required: true
     },
-    payment_info:{
-        type: Object,
-        // required: true
+    amount:{
+        type: Number,
+        required: true
+    },
+    razorpay:{
+        orderId: String,
+        paymentId: String,
+        signature: String,
     },
 },{timestamps: true});
 

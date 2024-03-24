@@ -5,12 +5,12 @@
   "type": "commonjs",
   "main": "build/server.js",
   "engines": {
-    "node":"18.x"
+    "node": "18.x"
   },
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only server.ts",
-    "start":"node build/server.js",    
-    "build":"tsc"
+    "start": "node build/server.js",
+    "build": "tsc"
   },
   "author": "EC & SPM Project",
   "license": "ISC",
@@ -28,6 +28,7 @@
     "cloudinary": "^1.39.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
+    "crypto": "^1.0.1",
     "dotenv": "^16.3.1",
     "ejs": "^3.1.9",
     "express": "^4.18.2",
@@ -37,8 +38,8 @@
     "mongoose": "^7.4.1",
     "node-cron": "^3.0.2",
     "nodemailer": "^6.9.4",
+    "razorpay": "^2.9.2",
     "socket.io": "^4.7.2",
-    "stripe": "^13.3.0",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.1.6"
   },

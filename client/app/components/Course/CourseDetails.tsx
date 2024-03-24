@@ -3,54 +3,138 @@ import CoursePlayer from "@/app/utils/CoursePlayer";
 import Ratings from "@/app/utils/Ratings";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { IoCheckmarkDoneOutline, IoCloseOutline } from "react-icons/io5";
+import { IoCheckmarkDoneOutline } from "react-icons/io5";
 import { format } from "timeago.js";
 import CourseContentList from "../Course/CourseContentList";
-import { Elements } from "@stripe/react-stripe-js";
-import CheckOutForm from "../Payment/CheckOutForm";
 import { useLoadUserQuery } from "@/redux/features/api/apiSlice";
 import Image from "next/image";
 import { VscVerifiedFilled } from "react-icons/vsc";
+import { useCreateOrderMutation, useCreatePaymentIntentMutation } from "@/redux/features/orders/ordersApi";
+import { toast } from "react-hot-toast";
+import socketIO from "socket.io-client";
+const ENDPOINT = process.env.NEXT_PUBLIC_SOCKET_SERVER_URI || "http://localhost:8000/";
+const socketId = socketIO(ENDPOINT, { transports: ["websocket"] });
+import { redirect } from "next/navigation";
 
 type Props = {
   data: any;
-  stripePromise: any;
-  clientSecret: string;
   setRoute: any;
   setOpen: any;
 };
 
 const CourseDetails = ({
-  data,
-  stripePromise,
-  clientSecret,
+  data: courseData,
   setRoute,
   setOpen: openAuthModal,
 }: Props) => {
+  const [createOrder, { data: orderData, error }] = useCreateOrderMutation();
+  const [newPayment] = useCreatePaymentIntentMutation();
+  const [isLoading, setIsLoading] = useState(false);
   const { data: userData,refetch } = useLoadUserQuery(undefined, {});
   const [user, setUser] = useState<any>();
-  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     setUser(userData?.user);
   }, [userData]);
 
   const dicountPercentenge =
-    ((data?.estimatedPrice - data.price) / data?.estimatedPrice) * 100;
+    ((courseData?.estimatedPrice - courseData.price) / courseData?.estimatedPrice) * 100;
 
   const discountPercentengePrice = dicountPercentenge.toFixed(0);
 
   const isPurchased =
-    user && user?.courses?.find((item: any) => item._id === data._id);
-
-  const handleOrder = (e: any) => {
+    user && user?.courses?.find((item: any) => item._id === courseData._id);
+      
+    const loadRazorpay = ()=> {
+      return new Promise((resolve) => {
+        const script = document.createElement('script')
+        script.src = 'https://checkout.razorpay.com/v1/checkout.js'
+        script.onload = () => {
+          resolve(true)
+        }
+        script.onerror = () => {
+          resolve(false)
+        }
+        document.body.appendChild(script)
+      })
+    }
+  
+  const handleOrder = async (e: any) => {
     if (user) {
-      setOpen(true);
+      e.preventDefault();
+
+      setIsLoading(true);
+  
+      if (error) {
+        const errorMessage = error as any;
+        toast.error(errorMessage.data.message);
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+        const orderData = await createOrder({ courseId: courseData._id});             
+        let message = await loadRazorpay();
+        if(!message) toast.error("Please check your internet connection!");
+
+        try {
+          const options = {
+            key: process.env.RAZORPAY_KEY || "rzp_test_kPCSWVuQkDtTZm",
+            amount: (courseData.price * 100).toString(),
+            currency: "INR",
+            name: user.name,
+            description: "Course Purchase",
+            order_id: (orderData.data.order).toString(),
+            handler: function (response: any) {
+              const razorpay = {
+                orderId: response.razorpay_order_id,
+                paymentId: response.razorpay_payment_id,
+                signature: response.razorpay_signature
+              }
+              newPayment({ razorpay : razorpay, courseId: courseData._id});
+
+            },
+            prefill: {
+              name: user.name,
+              email: user.email,
+            },
+            theme: {
+              color: '#1d2bf7',
+            }
+          };
+  
+          const _window = window as any;
+          const paymentObject = new _window.Razorpay(options);
+          paymentObject.open();
+        } catch (error) {
+         console.log(error, "   courseDetails 109");
+         
+          setIsLoading(false);
+        }
+      }
     } else {
       setRoute("Login");
       openAuthModal(true);
     }
   };
+
+  useEffect(() => {
+    if(orderData){
+     refetch();
+     socketId.emit("notification", {
+        title: "New Order",
+        message: `You have a new order from ${courseData.name}`,
+        userId: user._id,
+     });
+     redirect(`/course-access/${courseData._id}`);
+    }
+    if(error){
+     if ("data" in error) {
+         const errorMessage = error as any;
+         toast.error(errorMessage.data.message);
+       }
+    }
+   }, [orderData,error])
+   
+ 
 
   return (
     <div>
@@ -58,17 +142,17 @@ const CourseDetails = ({
         <div className="w-full flex flex-col-reverse 800px:flex-row">
           <div className="w-full 800px:w-[65%] 800px:pr-5">
             <h1 className="text-[25px] font-Poppins font-[600] text-black dark:text-white">
-              {data.name}
+              {courseData.name}
             </h1>
             <div className="flex items-center justify-between pt-3">
               <div className="flex items-center">
-                <Ratings rating={data.ratings} />
+                <Ratings rating={courseData.ratings} />
                 <h5 className="text-black dark:text-white">
-                  {data.reviews?.length} Reviews
+                  {courseData.reviews?.length} Reviews
                 </h5>
               </div>
               <h5 className="text-black dark:text-white">
-                {data.purchased} Students
+                {courseData.purchased} Students
               </h5>
             </div>
 
@@ -77,7 +161,7 @@ const CourseDetails = ({
               What you will learn from this course?
             </h1>
             <div>
-              {data.benefits?.map((item: any, index: number) => (
+              {courseData.benefits?.map((item: any, index: number) => (
                 <div
                   className="w-full flex 800px:items-center py-2"
                   key={index}
@@ -99,7 +183,7 @@ const CourseDetails = ({
             <h1 className="text-[25px] font-Poppins font-[600] text-black dark:text-white">
               What are the prerequisites for starting this course?
             </h1>
-            {data.prerequisites?.map((item: any, index: number) => (
+            {courseData.prerequisites?.map((item: any, index: number) => (
               <div className="w-full flex 800px:items-center py-2" key={index}>
                 <div className="w-[15px] mr-1">
                   <IoCheckmarkDoneOutline
@@ -116,7 +200,7 @@ const CourseDetails = ({
               <h1 className="text-[25px] font-Poppins font-[600] text-black dark:text-white">
                 Course Overview
               </h1>
-              <CourseContentList data={data?.courseData} isDemo={true} />
+              <CourseContentList data={courseData?.courseData} isDemo={true} />
             </div>
             <br />
             <br />
@@ -126,24 +210,24 @@ const CourseDetails = ({
                 Course Details
               </h1>
               <p className="text-[18px] mt-[20px] whitespace-pre-line w-full overflow-hidden text-black dark:text-white">
-                {data.description}
+                {courseData.description}
               </p>
             </div>
             <br />
             <br />
             <div className="w-full">
               <div className="800px:flex items-center">
-                <Ratings rating={data?.ratings} />
+                <Ratings rating={courseData?.ratings} />
                 <div className="mb-2 800px:mb-[unset]" />
                 <h5 className="text-[25px] font-Poppins text-black dark:text-white">
-                  {Number.isInteger(data?.ratings)
-                    ? data?.ratings.toFixed(1)
-                    : data?.ratings.toFixed(2)}{" "}
-                  Course Rating • {data?.reviews?.length} Reviews
+                  {Number.isInteger(courseData?.ratings)
+                    ? courseData?.ratings.toFixed(1)
+                    : courseData?.ratings.toFixed(2)}{" "}
+                  Course Rating • {courseData?.reviews?.length} Reviews
                 </h5>
               </div>
               <br />
-              {(data?.reviews && [...data.reviews].reverse()).map(
+              {(courseData?.reviews && [...courseData.reviews].reverse()).map(
                 (item: any, index: number) => (
                   <div className="w-full pb-4" key={index}>
                     <div className="flex">
@@ -215,13 +299,13 @@ const CourseDetails = ({
           </div>
           <div className="w-full 800px:w-[35%] relative">
             <div className="sticky top-[100px] left-0 z-50 w-full">
-              <CoursePlayer videoUrl={data?.demoUrl} title={data?.title} />
+              <CoursePlayer videoUrl={courseData?.demoUrl} title={courseData?.title} />
               <div className="flex items-center">
                 <h1 className="pt-5 text-[25px] text-black dark:text-white">
-                  {data.price === 0 ? "Free" : data.price + "$"}
+                  {courseData.price === 0 ? "Free" : courseData.price + "$"}
                 </h1>
                 <h5 className="pl-3 text-[20px] mt-2 line-through opacity-80 text-black dark:text-white">
-                  {data.estimatedPrice}$
+                  {courseData.estimatedPrice}$
                 </h5>
 
                 <h4 className="pl-5 pt-4 text-[22px] text-black dark:text-white">
@@ -232,7 +316,7 @@ const CourseDetails = ({
                 {isPurchased ? (
                   <Link
                     className={`${styles.button} !w-[180px] my-3 font-Poppins cursor-pointer !bg-[crimson]`}
-                    href={`/course-access/${data._id}`}
+                    href={`/course-access/${courseData._id}`}
                   >
                     Enter to Course
                   </Link>
@@ -241,7 +325,7 @@ const CourseDetails = ({
                     className={`${styles.button} !w-[180px] my-3 font-Poppins cursor-pointer !bg-[crimson]`}
                     onClick={handleOrder}
                   >
-                    Buy Now {data.price}$
+                    Buy Now {courseData.price}$
                   </div>
                 )}
               </div>
@@ -259,28 +343,6 @@ const CourseDetails = ({
           </div>
         </div>
       </div>
-      <>
-        {open && (
-          <div className="w-full h-screen bg-[#00000036] fixed top-0 left-0 z-50 flex items-center justify-center">
-            <div className="w-[500px] min-h-[500px] bg-white rounded-xl shadow p-3">
-              <div className="w-full flex justify-end">
-                <IoCloseOutline
-                  size={40}
-                  className="text-black cursor-pointer"
-                  onClick={() => setOpen(false)}
-                />
-              </div>
-              <div className="w-full">
-                {stripePromise && clientSecret && (
-                  <Elements stripe={stripePromise} options={{ clientSecret }}>
-                    <CheckOutForm setOpen={setOpen} data={data} user={user} refetch={refetch} />
-                  </Elements>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
-      </>
     </div>
   );
 };
