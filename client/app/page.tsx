@@ -20,7 +20,7 @@ const Page: FC<Props> = (props) => {
       <Heading
         title="FinesseFleet"
         description="FinesseFleet is a platform for students to learn and get help from teachers"
-        keywords="Prograaming,MERN,Redux,Machine Learning"
+        keywords="Physics, Chemistry, Mathematics, Biology"
       />
       <div>
         <Header

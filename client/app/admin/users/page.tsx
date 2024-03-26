@@ -15,7 +15,7 @@ const page = (props: Props) => {
         <Heading
           title="FinesseFleet - Admin"
           description="FinesseFleet is a platform for students to learn and get help from teachers"
-          keywords="Programming,MERN,Redux,Machine Learning"
+          keywords="Physics, Chemistry, Mathematics, Biology"
         />
         <div className="flex h-screen">
           <div className="1500px:w-[16%] w-1/5">

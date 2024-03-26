@@ -40,7 +40,7 @@ const CoursePreview: FC<Props> = ({
         <div className="w-full mt-10">
           <CoursePlayer
             videoUrl={courseData?.demoUrl}
-            title={courseData?.title}
+            width={"710"} height={"400"}
           />
         </div>
         <div className="flex items-center">

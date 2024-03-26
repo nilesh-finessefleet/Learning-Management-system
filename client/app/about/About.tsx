@@ -6,59 +6,58 @@ const About = () => {
     <div className="text-black dark:text-white">
       <br />
       <h1 className={`${styles.title} 800px:!text-[45px]`}>
-        What is <span className="text-gradient">E-Learning?</span>
+        What is <span className="text-gradient">FinesseFleet?</span>
       </h1>
 
       <br />
-      <div className="w-[95%] 800px:w-[85%] m-auto">
-        <p className="text-[18px] font-Poppins">
-          Are you ready to take your programming skills to the next level? Look
-          no further than E-learning, the premier programming community
-          dedicated to helping new programmers achieve their goals and reach
-          their full potential.
+      <div className="text-[18px] w-[95%] 800px:w-[85%] m-auto">
+        <p className="font-Poppins">
+          FinesseFleet, India&apos;s leading educational platform, is on a
+          mission to redefine education in a better way. They believe in
+          unlocking the unique potential within every student by providing
+          personalized guidance. Tailored to individual preferences, their
+          guidance ensures students can excel confidently in their chosen
+          fields. Whether it&apos;s K-12 education, IIT JEE, NEET, JAM, or other
+          examinations, FinesseFleet aims to empower students on their journey
+          to academic excellence.
           <br />
           <br />
-          As the founder and CEO of E-learning, I know firsthand the challenges
-          that come with learning and growing in the programming industry.
-          That&apos;s why I created E-learning &ndash; to provide new
-          programmers with the resources and support they need to succeed.
-          <br />
-          <br />
-          Our YouTube channel is a treasure trove of informative videos on
-          everything from programming basics to advanced techniques. But
-          that&apos;s just the beginning. Our affordable courses are designed to
-          give you the high-quality education you need to succeed in the
-          industry, without breaking the bank.
-          <br />
-          <br />
-          At E-learning, we believe that price should never be a barrier to
-          achieving your dreams. That&apos;s why our courses are priced low
-          &ndash; so that anyone, regardless of their financial situation, can
-          access the tools and knowledge they need to succeed.
-          <br />
-          <br />
-          But E-learning is more than just a community &ndash; we&apos;re a
-          family. Our supportive community of like-minded individuals is here to
-          help you every step of the way, whether you&apos;re just starting out
-          or looking to take your skills to the next level.
-          <br />
-          <br />
-          With E-learning by your side, there&apos;s nothing standing between
-          you and your dream job. Our courses and community will provide you
-          with the guidance, support, and motivation you need to unleash your
-          full potential and become a skilled programmer.
-          <br />
-          <br />
-          So what are you waiting for? Join the E-learning family today and
-          let&apos;s conquer the programming industry together! With our
-          affordable courses, informative videos, and supportive community, the
-          sky&apos;s the limit.
+          Here&apos;s what makes FinesseFleet special: Holistic Development at
+          the Core: FinesseFleet focuses on more than just academics. They
+          nurture holistic growth by providing personalized mentorship and
+          excellent technological support. Dynamic Mentorships for Individuals:
+          Leveraging the latest generation technology, FinesseFleet offers
+          mentorship tailored to each student&apos;s unique approach to thinking
+          and executing tasks. Weekly Doubt Clearing Sessions: Students can get
+          their doubts clarified promptly, ensuring a smooth learning
+          experience. Digitalized Mock Tests and Assignments: FinesseFleet
+          provides regular assessments to help students gauge their progress.
+          Parent-Faculty and Parent-Mentor Interaction: Regular communication
+          ensures a supportive learning environment.
         </p>
+          <br />
+          <br />
+          <div className="mx-10">
+          <em className="text-blue-400">
+            “As a parent, I firmly believe that education should be tailored to
+            the unique needs of each child. The approach to teaching must be
+            personalized, varying from one child to another. An ideal method
+            involves mentoring, providing a more effective and individualized
+            learning experience, and that&apos;s what FinesseFleet is aiming to
+            provide.” 
+            <p className="text-[20px] text-white text-center">— Arpita BA, Chairperson, FinesseFleet</p>
+          </em>
+          </div>
+          <br />
+          <br />
+          <p>
+            Join FinesseFleet today and unlock the world&apos;s future! Trusted by
+            industries, academic institutions, and individual students, their
+            commitment to quality education sets them apart.
+          </p>
+          <br />
+          <br />
         <br />
-        <span className="text-[22px]">Shahriarsajeeb&apos;s</span>
-        <h5 className="text-[18px] font-Poppins">
-          Founder and CEO of E-learning
-        </h5>
         <br />
         <br />
         <br />

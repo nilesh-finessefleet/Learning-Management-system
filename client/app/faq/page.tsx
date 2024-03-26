@@ -16,7 +16,7 @@ const Page = (props: Props) => {
     <div className="min-h-screen">
       <Heading
         title="FAQ - FinesseFleet"
-        description="FinesseFleet is a learning management system for helping programmers."
+        description="FinesseFleet is a learning management system."
         keywords="programming,mern"
       />
       <Header

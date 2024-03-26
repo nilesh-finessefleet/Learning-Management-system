@@ -202,8 +202,8 @@ const CourseContentMedia = ({
   return (
     <div className="w-[95%] 800px:w-[86%] py-4 m-auto">
       <CoursePlayer
-        title={data[activeVideo]?.title}
         videoUrl={data[activeVideo]?.videoUrl}
+        width={"760"} height={"440"}
       />
       <div className="w-full flex items-center justify-between my-3">
         <div

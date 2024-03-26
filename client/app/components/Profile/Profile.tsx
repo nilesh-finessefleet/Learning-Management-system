@@ -30,16 +30,6 @@ const Profile: FC<Props> = ({ user }) => {
     await signOut();
   };
 
-  // if (typeof window !== "undefined") {
-  //   window.addEventListener("scroll", () => {
-  //     if (window.scrollY > 85) {
-  //       setScroll(true);
-  //     } else {
-  //       setScroll(false);
-  //     }
-  //   });
-  // }
-
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 85) {

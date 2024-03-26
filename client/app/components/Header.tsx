@@ -15,6 +15,7 @@ import { useLogOutQuery, useSocialAuthMutation } from "@/redux/features/auth/aut
 import { toast } from "react-hot-toast";
 import { useLoadUserQuery } from "@/redux/features/api/apiSlice";
 import Loader from "./Loader/Loader";
+import logo from "../../public/assests/logo1.png";
 
 type Props = {
   open: boolean;
@@ -57,16 +58,6 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
       }
     }
   }, [data, userData,isLoading]);
-
-  // if (typeof window !== "undefined") {
-  //   window.addEventListener("scroll", () => {
-  //     if (window.scrollY > 85) {
-  //       setActive(true);
-  //     } else {
-  //       setActive(false);
-  //     }
-  //   });
-  // }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -111,14 +102,18 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
       >
         <div className="w-[95%] 800px:w-[92%] m-auto py-2 h-full">
           <div className="w-full h-[80px] flex items-center justify-between p-3">
-            <div>
-              <Link
+              <Link 
                 href={"/"}
-                className={`text-[25px] font-Poppins font-[500] text-black dark:text-white`}
+                className={`text-[25px] flex gap-3 font-Poppins font-[500] text-black dark:text-white`}
               >
+                <Image
+                  src={logo}
+                  alt="logo"
+                  width={35}
+                />
+
                 FinesseFleet
               </Link>
-            </div>
             <div className="flex items-center">
               <NavItems activeItem={activeItem} isMobile={false} />
               <ThemeSwitcher />
@@ -130,7 +125,8 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
                   onClick={() => setOpenSidebar(true)}
                 />
               </div>
-              {userData ? (
+              <div className="max-[800px]:hidden">
+                {userData ? (
                 <Link href={"/profile"}>
                   <Image
                     src={userData?.user.avatar ? userData.user.avatar.url : avatar}
@@ -148,6 +144,8 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
                   onClick={() => setOpen(true)}
                 />
               )}
+              </div>
+              
             </div>
           </div>
         </div>

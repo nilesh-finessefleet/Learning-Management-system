@@ -8,7 +8,6 @@ import path from "path";
 import ejs from "ejs";
 import sendMail from "../utils/sendMail";
 import NotificationModel from "../models/notification.Model";
-//import { getAllOrdersService, newOrder } from "../services/order.service";
 import { redis } from "../utils/redis";
 require("dotenv").config();
 import Razorpay from "razorpay";
@@ -38,57 +37,46 @@ export const createOrder = CatchAsyncError(
         return next(new ErrorHandler("Course not found", 404));
       }
 
-      // const data: any = {
-      //   courseId: course._id,
-      //   userId: user?._id,
-      //   amount: course.price,
-      //   razorpay:{
+      const mailData = {
+        order: {
+          _id: course._id.toString().slice(0, 6),
+          name: course.name,
+          price: course.price,
+          date: new Date().toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          }),
+        },
+      };
 
-      //   }
-      // };
+      await ejs.renderFile(
+        path.join(__dirname, "../mails/order-confirmation.ejs"),
+        { order: mailData }
+      );
 
-      // const mailData = {
-      //   order: {
-      //     _id: course._id.toString().slice(0, 6),
-      //     name: course.name,
-      //     price: course.price,
-      //     date: new Date().toLocaleDateString("en-US", {
-      //       year: "numeric",
-      //       month: "long",
-      //       day: "numeric",
-      //     }),
-      //   },
-      // };
+      try {
+        if (user) {
+          await sendMail({
+            email: user.email,
+            subject: "Order Confirmation",
+            template: "order-confirmation.ejs",
+            data: mailData,
+          });
+        }
+      } catch (error: any) {
+        return next(new ErrorHandler(error.message, 500));
+      }
 
-      // await ejs.renderFile(
-      //   path.join(__dirname, "../mails/order-confirmation.ejs"),
-      //   { order: mailData }
-      // );
-
-      // try {
-      //   if (user) {
-      //     await sendMail({
-      //       email: user.email,
-      //       subject: "Order Confirmation",
-      //       template: "order-confirmation.ejs",
-      //       data: mailData,
-      //     });
-      //   }
-      // } catch (error: any) {
-      //   return next(new ErrorHandler(error.message, 500));
-      // }
-
-      // await NotificationModel.create({
-      //   user: user?._id,
-      //   title: "New Order",
-      //   message: `You have a new order from ${course?.name}`,
-      // });
-
-      //newOrder(data, res, next);
+      await NotificationModel.create({
+        user: user?._id,
+        title: "New Order",
+        message: `You have a new order from ${course?.name}`,
+      });      
 
       const instance = new Razorpay({
-        key_id: process.env.RAZORPAY_KEY_ID! || "rzp_test_kPCSWVuQkDtTZm",
-        key_secret: process.env.RAZORPAY_SECRET || "UxpdIb3UOpuGCpvv30DXSSnU",
+        key_id: process.env.RAZORPAY_KEY!,
+        key_secret: process.env.RAZORPAY_SECRET,
       });
       const options = {
         amount: (course.price * 100),
@@ -152,7 +140,7 @@ export const newPayment = CatchAsyncError(
 
       let body = razorpay.orderId + "|" + razorpay.paymentId;
 
-    var expectedSignature = crypto.createHmac('sha256', process.env.RAZORPAY_SECRET || "UxpdIb3UOpuGCpvv30DXSSnU")
+    var expectedSignature = crypto.createHmac('sha256', process.env.RAZORPAY_SECRET!)
         .update(body.toString())
         .digest('hex');
 
@@ -182,7 +170,7 @@ export const newPayment = CatchAsyncError(
           msg: 'Payment was successfull',
         });
     } else {
-        res.send({ code: 500, message: 'Sign Invalid' });
+      return next(new ErrorHandler("Sign Invalid", 500));
     }
       
     } catch (error: any) {

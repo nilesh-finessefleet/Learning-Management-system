@@ -14,7 +14,6 @@ import { toast } from "react-hot-toast";
 import socketIO from "socket.io-client";
 const ENDPOINT = process.env.NEXT_PUBLIC_SOCKET_SERVER_URI || "http://localhost:8000/";
 const socketId = socketIO(ENDPOINT, { transports: ["websocket"] });
-import { redirect } from "next/navigation";
 
 type Props = {
   data: any;
@@ -71,7 +70,8 @@ const CourseDetails = ({
         setIsLoading(false);
       } else {
         setIsLoading(false);
-        const orderData = await createOrder({ courseId: courseData._id});             
+
+        const orderData = await createOrder({ courseId: courseData._id}) as any;   
         let message = await loadRazorpay();
         if(!message) toast.error("Please check your internet connection!");
 
@@ -90,7 +90,7 @@ const CourseDetails = ({
                 signature: response.razorpay_signature
               }
               newPayment({ razorpay : razorpay, courseId: courseData._id});
-
+              location.href = `/course-access/${courseData._id}`;
             },
             prefill: {
               name: user.name,
@@ -98,15 +98,13 @@ const CourseDetails = ({
             },
             theme: {
               color: '#1d2bf7',
-            }
+            },
           };
   
           const _window = window as any;
           const paymentObject = new _window.Razorpay(options);
           paymentObject.open();
-        } catch (error) {
-         console.log(error, "   courseDetails 109");
-         
+        } catch (error) {         
           setIsLoading(false);
         }
       }
@@ -124,7 +122,6 @@ const CourseDetails = ({
         message: `You have a new order from ${courseData.name}`,
         userId: user._id,
      });
-     redirect(`/course-access/${courseData._id}`);
     }
     if(error){
      if ("data" in error) {
@@ -134,8 +131,6 @@ const CourseDetails = ({
     }
    }, [orderData,error])
    
- 
-
   return (
     <div>
       <div className="w-[90%] 800px:w-[90%] m-auto py-5">
@@ -299,7 +294,7 @@ const CourseDetails = ({
           </div>
           <div className="w-full 800px:w-[35%] relative">
             <div className="sticky top-[100px] left-0 z-50 w-full">
-              <CoursePlayer videoUrl={courseData?.demoUrl} title={courseData?.title} />
+              <CoursePlayer videoUrl={courseData?.demoUrl} width={"540"} height={"350"} />
               <div className="flex items-center">
                 <h1 className="pt-5 text-[25px] text-black dark:text-white">
                   {courseData.price === 0 ? "Free" : courseData.price + "$"}

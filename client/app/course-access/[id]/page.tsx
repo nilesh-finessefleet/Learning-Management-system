@@ -11,10 +11,11 @@ type Props = {
 
 const Page = ({params}: Props) => {
     const id = params.id;
-  const { isLoading, error, data,refetch } = useLoadUserQuery(undefined, {});
+  const { isLoading, error, data, refetch } = useLoadUserQuery(undefined, {});  
 
   useEffect(() => {
     if (data) {
+      refetch()
       const isPurchased = data.user.courses.find(
         (item: any) => item._id === id
       );
