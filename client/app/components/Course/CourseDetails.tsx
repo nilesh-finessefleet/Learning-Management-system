@@ -12,7 +12,7 @@ import { VscVerifiedFilled } from "react-icons/vsc";
 import { useCreateOrderMutation, useCreatePaymentIntentMutation } from "@/redux/features/orders/ordersApi";
 import { toast } from "react-hot-toast";
 import socketIO from "socket.io-client";
-const ENDPOINT = process.env.NEXT_PUBLIC_SOCKET_SERVER_URI || "http://localhost:8000/";
+const ENDPOINT = process.env.NEXT_PUBLIC_SOCKET_SERVER_URI!;
 const socketId = socketIO(ENDPOINT, { transports: ["websocket"] });
 
 type Props = {
@@ -77,7 +77,7 @@ const CourseDetails = ({
 
         try {
           const options = {
-            key: process.env.RAZORPAY_KEY || "rzp_test_kPCSWVuQkDtTZm",
+            key: process.env.RAZORPAY_KEY,
             amount: (courseData.price * 100).toString(),
             currency: "INR",
             name: user.name,

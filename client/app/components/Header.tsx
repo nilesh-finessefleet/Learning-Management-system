@@ -16,6 +16,7 @@ import { toast } from "react-hot-toast";
 import { useLoadUserQuery } from "@/redux/features/api/apiSlice";
 import Loader from "./Loader/Loader";
 import logo from "../../public/assests/logo1.png";
+import { IoCloseOutline } from "react-icons/io5";
 
 type Props = {
   open: boolean;
@@ -79,7 +80,7 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
   }, []);
 
   const handleClose = (e: any) => {
-    if (e.target.id === "screen") {
+    if (e.target.id === "closeSidebar") {
       {
         setOpenSidebar(false);
       }
@@ -153,13 +154,22 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
         {/* mobile sidebar */}
         {openSidebar && (
           <div
-            className="fixed w-full h-screen top-0 left-0 z-[99999] dark:bg-[unset] bg-[#00000024]"
+            className=" fixed w-full h-screen top-0 left-0 z-[99999] dark:bg-[unset] bg-[#00000024]"
             onClick={handleClose}
-            id="screen"
+            id="closeSidebar"
           >
+            
             <div className="w-[70%] fixed z-[999999999] h-screen bg-white dark:bg-slate-900 dark:bg-opacity-90 top-0 right-0">
+            <div className=" absolute w-full pr-2 pt-2 flex justify-end">
+                <IoCloseOutline
+                  size={40}
+                  className= " text-black dark:text-white cursor-pointer"
+                  onClick={handleClose}
+                  id="closeSidebar"
+                />
+              </div>
               <NavItems activeItem={activeItem} isMobile={true} />
-              {userData?.user ? (
+              {userData ? (
                 <Link href={"/profile"}>
                   <Image
                     src={userData?.user.avatar ? userData.user.avatar.url : avatar}
@@ -173,7 +183,7 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
               ) : (
                 <HiOutlineUserCircle
                   size={25}
-                  className="hidden 800px:block cursor-pointer dark:text-white text-black"
+                  className=" ml-[20px] 800px:block cursor-pointer dark:text-white text-black"
                   onClick={() => setOpen(true)}
                 />
               )}

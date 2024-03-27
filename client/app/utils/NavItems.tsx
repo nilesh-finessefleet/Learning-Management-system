@@ -1,5 +1,8 @@
 import Link from "next/link";
 import React from "react";
+import Image from "next/image";
+import logo from "../../public/assests/logo1.png";
+
 
 export const navItemsData = [
   {
@@ -48,10 +51,19 @@ const NavItems: React.FC<Props> = ({ activeItem, isMobile }) => {
             </Link>
           ))}
       </div>
+
+      
       {isMobile && (
         <div className="800px:hidden mt-5">
           <div className="w-full text-center py-6">
-            <Link href={"/"} passHref>             
+            <Link href={"/"} passHref>
+              <div className="relative flex justify-center pb-4">
+                <Image
+                  src={logo}
+                  alt="logo"
+                  width={35}
+                /> 
+              </div>            
               <span className={`text-[25px] font-Poppins font-[500] text-black dark:text-white`}
               >
                 FinesseFleet
