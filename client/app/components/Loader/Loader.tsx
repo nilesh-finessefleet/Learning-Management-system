@@ -1,5 +1,6 @@
 import React from "react";
 import "./Loader.css";
+import dynamic from "next/dynamic";
 
 const Loader = () => {
   return (
@@ -9,4 +10,4 @@ const Loader = () => {
   );
 };
 
-export default Loader;
+export default dynamic (() => Promise.resolve(Loader), {ssr: false})
