@@ -88,11 +88,11 @@ const Footer = (props: Props) => {
             </p>
            
             <p className="text-base text-black dark:text-gray-300 dark:hover:text-white pb-2">
-            Address: Koramangala, Bengaluru, KA 560 034, India
+            Address: Koramangala, Bengaluru,<br /> KA 560 034, India
             </p>
          
             <p className="text-base text-black dark:text-gray-300 dark:hover:text-white  pb-2">
-            Mail Us: suppoprt@finessefleet.com
+            Mail Us: communications@finessefleet.com
             </p>
             
           </div>

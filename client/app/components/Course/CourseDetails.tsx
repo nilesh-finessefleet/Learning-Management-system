@@ -9,7 +9,10 @@ import CourseContentList from "../Course/CourseContentList";
 import { useLoadUserQuery } from "@/redux/features/api/apiSlice";
 import Image from "next/image";
 import { VscVerifiedFilled } from "react-icons/vsc";
-import { useCreateOrderMutation, useCreatePaymentIntentMutation } from "@/redux/features/orders/ordersApi";
+import {
+  useCreateOrderMutation,
+  useCreatePaymentIntentMutation,
+} from "@/redux/features/orders/ordersApi";
 import { toast } from "react-hot-toast";
 import socketIO from "socket.io-client";
 const ENDPOINT = process.env.NEXT_PUBLIC_SOCKET_SERVER_URI!;
@@ -29,7 +32,7 @@ const CourseDetails = ({
   const [createOrder, { data: orderData, error }] = useCreateOrderMutation();
   const [newPayment] = useCreatePaymentIntentMutation();
   const [isLoading, setIsLoading] = useState(false);
-  const { data: userData,refetch } = useLoadUserQuery(undefined, {});
+  const { data: userData, refetch } = useLoadUserQuery(undefined, {});
   const [user, setUser] = useState<any>();
 
   useEffect(() => {
@@ -37,33 +40,35 @@ const CourseDetails = ({
   }, [userData]);
 
   const dicountPercentenge =
-    ((courseData?.estimatedPrice - courseData.price) / courseData?.estimatedPrice) * 100;
+    ((courseData?.estimatedPrice - courseData.price) /
+      courseData?.estimatedPrice) *
+    100;
 
   const discountPercentengePrice = dicountPercentenge.toFixed(0);
 
   const isPurchased =
     user && user?.courses?.find((item: any) => item._id === courseData._id);
-      
-    const loadRazorpay = ()=> {
-      return new Promise((resolve) => {
-        const script = document.createElement('script')
-        script.src = 'https://checkout.razorpay.com/v1/checkout.js'
-        script.onload = () => {
-          resolve(true)
-        }
-        script.onerror = () => {
-          resolve(false)
-        }
-        document.body.appendChild(script)
-      })
-    }
-  
+
+  const loadRazorpay = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => {
+        resolve(true);
+      };
+      script.onerror = () => {
+        resolve(false);
+      };
+      document.body.appendChild(script);
+    });
+  };
+
   const handleOrder = async (e: any) => {
     if (user) {
       e.preventDefault();
 
       setIsLoading(true);
-  
+
       if (error) {
         const errorMessage = error as any;
         toast.error(errorMessage.data.message);
@@ -71,9 +76,11 @@ const CourseDetails = ({
       } else {
         setIsLoading(false);
 
-        const orderData = await createOrder({ courseId: courseData._id}) as any;   
+        const orderData = (await createOrder({
+          courseId: courseData._id,
+        })) as any;
         let message = await loadRazorpay();
-        if(!message) toast.error("Please check your internet connection!");
+        if (!message) toast.error("Please check your internet connection!");
 
         try {
           const options = {
@@ -82,14 +89,14 @@ const CourseDetails = ({
             currency: "INR",
             name: user.name,
             description: "Course Purchase",
-            order_id: (orderData.data.order).toString(),
+            order_id: orderData.data.order.toString(),
             handler: function (response: any) {
               const razorpay = {
                 orderId: response.razorpay_order_id,
                 paymentId: response.razorpay_payment_id,
-                signature: response.razorpay_signature
-              }
-              newPayment({ razorpay : razorpay, courseId: courseData._id});
+                signature: response.razorpay_signature,
+              };
+              newPayment({ razorpay: razorpay, courseId: courseData._id });
               location.href = `/course-access/${courseData._id}`;
             },
             prefill: {
@@ -97,14 +104,14 @@ const CourseDetails = ({
               email: user.email,
             },
             theme: {
-              color: '#1d2bf7',
+              color: "#1d2bf7",
             },
           };
-  
+
           const _window = window as any;
           const paymentObject = new _window.Razorpay(options);
           paymentObject.open();
-        } catch (error) {         
+        } catch (error) {
           setIsLoading(false);
         }
       }
@@ -115,22 +122,22 @@ const CourseDetails = ({
   };
 
   useEffect(() => {
-    if(orderData){
-     refetch();
-     socketId.emit("notification", {
+    if (orderData) {
+      refetch();
+      socketId.emit("notification", {
         title: "New Order",
         message: `You have a new order from ${courseData.name}`,
         userId: user._id,
-     });
+      });
     }
-    if(error){
-     if ("data" in error) {
-         const errorMessage = error as any;
-         toast.error(errorMessage.data.message);
-       }
+    if (error) {
+      if ("data" in error) {
+        const errorMessage = error as any;
+        toast.error(errorMessage.data.message);
+      }
     }
-   }, [orderData,error])
-   
+  }, [orderData, error]);
+
   return (
     <div>
       <div className="w-[90%] 800px:w-[90%] m-auto py-5">
@@ -294,19 +301,11 @@ const CourseDetails = ({
           </div>
           <div className="w-full 800px:w-[35%] relative">
             <div className="sticky top-[100px] left-0 z-50 w-full">
-              <CoursePlayer videoUrl={courseData?.demoUrl} width={"540"} height={"350"} />
-              <div className="flex items-center">
-                <h1 className="pt-5 text-[25px] text-black dark:text-white">
-                  {courseData.price === 0 ? "Free" : courseData.price + " ₹"}
-                </h1>
-                <h5 className="pl-3 text-[20px] mt-2 line-through opacity-80 text-black dark:text-white">
-                  {courseData.estimatedPrice} ₹
-                </h5>
-
-                <h4 className="pl-5 pt-4 text-[22px] text-black dark:text-white">
-                  {discountPercentengePrice}% Off
-                </h4>
-              </div>
+              <CoursePlayer
+                videoUrl={courseData?.demoUrl}
+                width={"540"}
+                height={"350"}
+              />
               <div className="flex items-center">
                 {isPurchased ? (
                   <Link
@@ -316,11 +315,27 @@ const CourseDetails = ({
                     Enter to Course
                   </Link>
                 ) : (
-                  <div
-                    className={`${styles.button} !w-[180px] my-3 font-Poppins cursor-pointer !bg-[crimson]`}
-                    onClick={handleOrder}
-                  >
-                    Buy Now {courseData.price} ₹
+                  <div>
+                    <div className="flex items-center">
+                      <h1 className="pt-5 text-[25px] text-black dark:text-white">
+                        {courseData.price === 0
+                          ? "Free"
+                          : courseData.price + " ₹"}
+                      </h1>
+                      <h5 className="pl-3 text-[20px] mt-2 line-through opacity-80 text-black dark:text-white">
+                        {courseData.estimatedPrice} ₹
+                      </h5>
+
+                      <h4 className="pl-5 pt-4 text-[22px] text-black dark:text-white">
+                        {discountPercentengePrice}% Off
+                      </h4>
+                    </div>
+                    <div
+                      className={`${styles.button} !w-[180px] my-3 font-Poppins cursor-pointer !bg-[crimson]`}
+                      onClick={handleOrder}
+                    >
+                      Buy Now {courseData.price} ₹
+                    </div>
                   </div>
                 )}
               </div>

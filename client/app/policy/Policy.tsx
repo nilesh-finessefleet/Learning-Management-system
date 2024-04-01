@@ -139,6 +139,12 @@ const Policy = (props: Props) => {
             posted on our website, and we recommend reviewing it regularly.
           </p>
         </div>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
       </div>
     </div>
   );
