@@ -91,13 +91,13 @@ const Login: FC<Props> = ({ setRoute, setOpen,refetch }) => {
           />
           {!show ? (
             <AiOutlineEyeInvisible
-              className="absolute bottom-3 right-2 z-1 cursor-pointer"
+              className="absolute bottom-3 right-2 z-1 cursor-pointer text-black dark:text-white"
               size={20}
               onClick={() => setShow(true)}
             />
           ) : (
             <AiOutlineEye
-              className="absolute bottom-3 right-2 z-1 cursor-pointer"
+              className="absolute bottom-3 right-2 z-1 cursor-pointer text-black dark:text-white"
               size={20}
               onClick={() => setShow(false)}
             />

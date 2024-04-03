@@ -18,7 +18,6 @@ import {
   QuizIcon,
   WysiwygIcon,
   ManageHistoryIcon,
-  SettingsIcon,
   ExitToAppIcon,
 } from "./Icon";
 import avatarDefault from "../../../../public/assests/avatar.png";
@@ -38,9 +37,9 @@ interface itemProps {
 const Item: FC<itemProps> = ({ title, to, icon, selected, setSelected }) => {
   return (
     <MenuItem
-      active={selected === title}
       onClick={() => setSelected(title)}
       icon={icon}
+      active={selected === title}
     >
       <Typography className="!text-[16px] !font-Poppins">{title}</Typography>
       <Link href={to} />

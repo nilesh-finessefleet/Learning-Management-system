@@ -35,7 +35,7 @@ const CoursePreview: FC<Props> = ({
   };
 
   return (
-    <div className="w-[90%] m-auto py-5 mb-5">
+    <div className="w-[90%] m-auto py-5 mb-5 text-black dark:text-white">
       <div className="w-full relative">
         <div className="w-full mt-10">
           <CoursePlayer
@@ -58,7 +58,7 @@ const CoursePreview: FC<Props> = ({
 
         <div className="flex items-center">
           <div
-            className={`${styles.button} !w-[180px] my-3 font-Poppins !bg-[crimson] cursor-not-allowed`}
+            className={`${styles.button} !w-[180px] my-3 font-Poppins !bg-[crimson] cursor-not-allowed text-white`}
           >
             Buy Now {courseData?.price}$
           </div>

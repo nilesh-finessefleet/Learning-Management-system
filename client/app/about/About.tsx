@@ -12,7 +12,7 @@ const About = () => {
       <br />
       <div className="text-[18px] w-[95%] 800px:w-[85%] m-auto">
         <p className="font-Poppins">
-          At FinesseFleet, we don't merely educate; we empower. Headquartered in
+          At FinesseFleet, we don&apos;t merely educate; we empower. Headquartered in
           Bengaluru, India, we stand as a vanguard in educational innovation,
           committed to transforming the global learning landscape. Our
           unwavering dedication lies in providing personalized guidance and

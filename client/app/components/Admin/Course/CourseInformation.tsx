@@ -1,5 +1,6 @@
 import { styles } from "@/app/styles/style";
 import { useGetHeroDataQuery } from "@/redux/features/layout/layoutApi";
+import Image from "next/image";
 import React, { FC, useEffect, useState } from "react";
 
 type Props = {
@@ -244,7 +245,9 @@ const CourseInformation: FC<Props> = ({
             onDrop={handleDrop}
           >
             {courseInfo.thumbnail ? (
-              <img
+              <Image
+              width={336}
+              height={188}
                 src={courseInfo.thumbnail}
                 alt=""
                 className="max-h-full w-full object-cover"
