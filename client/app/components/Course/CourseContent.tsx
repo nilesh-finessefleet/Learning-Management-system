@@ -42,7 +42,7 @@ const CourseContent = ({ id,user }: Props) => {
                 refetch={refetch}
               />
             </div>
-            <div className="hidden 800px:block 800px:col-span-3">
+            <div className="hidden 800px:block 800px:col-span-3 max-[950px]:pt-[500px] pl-5">
             <CourseContentList
               setActiveVideo={setActiveVideo}
               data={data}

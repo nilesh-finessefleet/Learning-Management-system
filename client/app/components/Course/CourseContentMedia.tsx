@@ -203,7 +203,7 @@ const CourseContentMedia = ({
     <div className="w-[95%] 800px:w-[86%] py-4 m-auto">
       <CoursePlayer
         videoUrl={data[activeVideo]?.videoUrl}
-        width={"760"} height={"440"}
+        width={"810"} height={"480"}
       />
       <div className="w-full flex items-center justify-between my-3">
         <div

@@ -301,11 +301,23 @@ const CourseDetails = ({
           </div>
           <div className="w-full 800px:w-[35%] relative">
             <div className="sticky top-[100px] left-0 z-50 w-full">
-              <CoursePlayer
-                videoUrl={courseData?.demoUrl}
-                width={"540"}
-                height={"350"}
-              />
+
+              <div className="min-[950px]:hidden">
+                <CoursePlayer
+                  videoUrl={courseData?.demoUrl}
+                  width={"290"}
+                  height={"170"}
+                />
+              </div>
+
+              <div className="max-[950px]:hidden">
+                <CoursePlayer
+                  videoUrl={courseData?.demoUrl}
+                  width={"540"}
+                  height={"350"}
+                />
+              </div>
+
               <div className="flex items-center">
                 {isPurchased ? (
                   <Link
