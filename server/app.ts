@@ -21,7 +21,7 @@ app.use(cookieParser());
 // cors => cross origin resource sharing
 app.use(
     cors({
-        origin: ["http://localhost:3000", "http://example1.com"],
+        origin: ["https://learning-management-system-git-b9219e-nileshs-projects-fd6a4fca.vercel.app"],
         credentials: true
     })
 );
