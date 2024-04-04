@@ -21,7 +21,7 @@ const CoursePlayer: FC<Props> = ({ videoUrl, width, height }) => {
     return youtubeId;
   }
 
-  let p1 = `http://www.youtube-nocookie.com/embed/${videoUrlId()}`;
+  let p1 = `https://www.youtube-nocookie.com/embed/${videoUrlId()}`;
   let p2 = "?rel=0";
 
   return (
