@@ -64,9 +64,9 @@ const ProfileInfo: FC<Props> = ({ avatar, user }) => {
           <Image
             src={user.avatar || avatar ? user.avatar.url || avatar : avatarIcon}
             alt=""
-            width={120}
-            height={120}
-            className="w-[120px] h-[120px] cursor-pointer border-[3px] border-[#37a39a] rounded-full"
+            width={220}
+            height={220}
+            className="w-[220px] h-[220px] cursor-pointer border-[3px] border-[#37a39a] rounded-full"
           />
           <input
             type="file"
@@ -77,7 +77,7 @@ const ProfileInfo: FC<Props> = ({ avatar, user }) => {
             accept="image/png,image/jpg,image/jpeg,image/webp"
           />
           <label htmlFor="avatar">
-            <div className="w-[30px] h-[30px] bg-slate-900 rounded-full absolute bottom-2 right-2 flex items-center justify-center cursor-pointer">
+            <div className="w-[45px] h-[45px] bg-gray-800 rounded-full absolute bottom-2 right-2 flex items-center justify-center cursor-pointer">
               <AiOutlineCamera size={20} className="z-1" />
             </div>
           </label>
