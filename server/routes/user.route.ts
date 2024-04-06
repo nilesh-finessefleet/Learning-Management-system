@@ -12,6 +12,8 @@ import {
   updateProfilePicture,
   updateUserInfo,
   updateUserRole,
+  forgotPassword,
+  changePassword
 } from "../controllers/user.controller";
 import { authorizeRoles, isAutheticated } from "../middleware/auth";
 const userRouter = express.Router();
@@ -23,6 +25,10 @@ userRouter.post("/activate-user", activateUser);
 userRouter.post("/login", loginUser);
 
 userRouter.get("/logout",isAutheticated, logoutUser);
+
+userRouter.post("/forgot-password", forgotPassword);
+
+userRouter.post("/change-password", changePassword);
 
 userRouter.get("/me", isAutheticated, getUserInfo);
 

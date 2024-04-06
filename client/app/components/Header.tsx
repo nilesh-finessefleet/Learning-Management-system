@@ -8,6 +8,9 @@ import CustomModal from "../utils/CustomModal";
 import Login from "../components/Auth/Login";
 import SignUp from "../components/Auth/SignUp";
 import Verification from "../components/Auth/Verification";
+import ForgotPassword from "../components/Auth/ForgotPassword";
+import PasswordVerification from "../components/Auth/PasswordVerification";
+
 import Image from "next/image";
 import avatar from "../../public/assests/avatar.png";
 import { useSession } from "next-auth/react";
@@ -121,7 +124,7 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
                   <ThemeSwitcher />
                   {/* only for mobile */}
                   <div className=" flex justify-center space-x-2 800px:hidden">
-                  {userData ? (
+                    {userData ? (
                       <Link href={"/profile"}>
                         <Image
                           src={
@@ -272,6 +275,34 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
                   setRoute={setRoute}
                   activeItem={activeItem}
                   component={Verification}
+                />
+              )}
+            </>
+          )}
+
+          {route === "Forgot-Password" && (
+            <>
+              {open && (
+                <CustomModal
+                  open={open}
+                  setOpen={setOpen}
+                  setRoute={setRoute}
+                  activeItem={activeItem}
+                  component={ForgotPassword}
+                />
+              )}
+            </>
+          )}
+
+          {route === "Password-Verification" && (
+            <>
+              {open && (
+                <CustomModal
+                  open={open}
+                  setOpen={setOpen}
+                  setRoute={setRoute}
+                  activeItem={activeItem}
+                  component={PasswordVerification}
                 />
               )}
             </>

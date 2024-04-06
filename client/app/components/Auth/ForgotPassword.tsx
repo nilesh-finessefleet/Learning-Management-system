@@ -5,17 +5,13 @@ import * as Yup from "yup";
 import {
   AiOutlineEye,
   AiOutlineEyeInvisible,
-  AiFillGithub,
 } from "react-icons/ai";
-import { FcGoogle } from "react-icons/fc";
 import { styles } from "../../../app/styles/style";
-import { useLoginMutation } from "@/redux/features/auth/authApi";
+import { useForgotPasswordMutation } from "@/redux/features/auth/authApi";
 import { toast } from "react-hot-toast";
-import {signIn} from "next-auth/react";
 
 type Props = {
   setRoute: (route: string) => void;
-  setOpen: (open: boolean) => void;
   refetch:any;
 };
 
@@ -26,36 +22,36 @@ const schema = Yup.object().shape({
   password: Yup.string().required("Please enter your password!").min(6),
 });
 
-const Login: FC<Props> = ({ setRoute, setOpen,refetch }) => {
+const ForgotPassword: FC<Props> = ({ setRoute,refetch }) => {
   const [show, setShow] = useState(false);
-  const [login, { isSuccess, error }] = useLoginMutation();
+  const [forgotPassword, { isSuccess, error }] = useForgotPasswordMutation();
   const formik = useFormik({
     initialValues: { email: "", password: "" },
     validationSchema: schema,
     onSubmit: async ({ email, password }) => {
-      await login({ email, password });
+      await forgotPassword({ email, password });
     },
   });
 
   useEffect(() => {
-    if (isSuccess) {
-      toast.success("Login Successfully!");
-      setOpen(false);
-      refetch();
+    if(isSuccess){
+       const message = "OTP sent to Mail";
+       toast.success(message);
+       setRoute("Password-Verification");
     }
-    if (error) {
-      if ("data" in error) {
-        const errorData = error as any;
-        toast.error(errorData.data.message);
-      }
+    if(error){
+     if("data" in error){
+       const errorData = error as any;
+       toast.error(errorData.data.message);
+     }
     }
-  }, [isSuccess, error]);
+   }, [isSuccess,error]);
 
   const { errors, touched, values, handleChange, handleSubmit } = formik;
 
   return (
     <div className="w-full">
-      <h1 className={`${styles.title}`}>Login with FinesseFleet</h1>
+      <h1 className={`${styles.title}`}>Forgot Password</h1>
       <form onSubmit={handleSubmit}>
         <label className={`${styles.label}`} htmlFor="email">
           Enter your Email
@@ -102,37 +98,22 @@ const Login: FC<Props> = ({ setRoute, setOpen,refetch }) => {
               onClick={() => setShow(false)}
             />
           )}
-          {errors.password && touched.password && (
-            <span className="text-red-500 pt-2 block">{errors.password}</span>
-          )}
         </div>
+        {errors.password && touched.password && (
+          <span className="text-red-500 pt-2 block">{errors.password}</span>
+        )}
         <div className="w-full mt-5">
-          <input type="submit" value="Login" className={`${styles.button}`} />
+          <input type="submit" value="Verify using OTP" className={`${styles.button}`} />
         </div>
         <br />
-        <span
-            className="text-[#2190ff] pl-1 cursor-pointer"
-            onClick={() => setRoute("Forgot-Password")}
-          >
-            Forgot Password?
-          </span>
-        <br />
+        
         <h5 className="text-center pt-4 font-Poppins text-[14px] text-black dark:text-white">
-          Or join with
-        </h5>
-        <div className="flex items-center justify-center my-3">
-          <FcGoogle size={30} className="cursor-pointer mr-2"
-          onClick={() => signIn("google")}
-          />
-          <AiFillGithub size={30} className="cursor-pointer bg-black ml-2 rounded-full" onClick={() => signIn("github")} />
-        </div>
-        <h5 className="text-center pt-4 font-Poppins text-[14px] text-black dark:text-white">
-          Not have any account?{" "}
+          Remember your password?{" "}
           <span
             className="text-[#2190ff] pl-1 cursor-pointer"
-            onClick={() => setRoute("Sign-Up")}
+            onClick={() => setRoute("Login")}
           >
-            Sign up
+            Sign in
           </span>
         </h5>
       </form>
@@ -141,4 +122,4 @@ const Login: FC<Props> = ({ setRoute, setOpen,refetch }) => {
   );
 };
 
-export default Login;
+export default ForgotPassword;
