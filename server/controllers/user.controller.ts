@@ -78,17 +78,16 @@ export const registrationUser = CatchAsyncError(
 
 interface IForgotPasswordBody {
   email: string;
-  password: string;
 }
 
 export const forgotPassword = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { email, password } = req.body as IForgotPasswordBody;
+      const { email } = req.body as IForgotPasswordBody;
 
       
-      if (!email || !password) {
-        return next(new ErrorHandler("Please enter email and password", 400));
+      if (!email) {
+        return next(new ErrorHandler("Please enter email", 400));
       }
       
       const user = await userModel.findOne({ email }).select("+password");
@@ -104,7 +103,7 @@ export const forgotPassword = CatchAsyncError(
 
       const data = { user: { name: user.name }, activationCode };
       const html = await ejs.renderFile(
-        path.join(__dirname, "../mails/activation-mail.ejs"),
+        path.join(__dirname, "../mails/forgot-password.ejs"),
         data
       );
 
@@ -112,7 +111,7 @@ export const forgotPassword = CatchAsyncError(
         await sendMail({
           email: user.email,
           subject: "Reset Password",
-          template: "activation-mail.ejs",
+          template: "forgot-password.ejs",
           data,
         });
 
@@ -156,14 +155,14 @@ export const createActivationToken = (user: any): IActivationToken => {
 interface IChangePasswordRequest {
   activation_token: string;
   activation_code: string;
+  password:string;
 }
 
 export const changePassword = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { activation_token, activation_code } =
-        req.body as IChangePasswordRequest;
-
+      const { activation_token, activation_code, password } =
+        req.body as IChangePasswordRequest;      
       const passwordChangedUser: { user: IUser; activationCode: string } = jwt.verify(
         activation_token,
         process.env.ACTIVATION_SECRET as string
@@ -173,7 +172,7 @@ export const changePassword = CatchAsyncError(
         return next(new ErrorHandler("Invalid activation code", 400));
       }
 
-      const { email, password} = passwordChangedUser.user;
+      const { email} = passwordChangedUser.user;
 
       const user = await userModel.findOne({ email }).select("+password");
 
@@ -185,13 +184,13 @@ export const changePassword = CatchAsyncError(
 
       await user.save();
 
-      await redis.set(req.user?._id, JSON.stringify(user));
-
       res.status(201).json({
         success: true,
         user,
       });
     } catch (error: any) {
+      console.log(error);
+      
       return next(new ErrorHandler(error.message, 400));
     }
   }

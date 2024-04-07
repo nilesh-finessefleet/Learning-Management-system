@@ -2,10 +2,6 @@
 import React, { FC, useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import {
-  AiOutlineEye,
-  AiOutlineEyeInvisible,
-} from "react-icons/ai";
 import { styles } from "../../../app/styles/style";
 import { useForgotPasswordMutation } from "@/redux/features/auth/authApi";
 import { toast } from "react-hot-toast";
@@ -19,17 +15,16 @@ const schema = Yup.object().shape({
   email: Yup.string()
     .email("Invalid email!")
     .required("Please enter your email!"),
-  password: Yup.string().required("Please enter your password!").min(6),
 });
 
 const ForgotPassword: FC<Props> = ({ setRoute,refetch }) => {
   const [show, setShow] = useState(false);
   const [forgotPassword, { isSuccess, error }] = useForgotPasswordMutation();
   const formik = useFormik({
-    initialValues: { email: "", password: "" },
+    initialValues: { email: ""},
     validationSchema: schema,
-    onSubmit: async ({ email, password }) => {
-      await forgotPassword({ email, password });
+    onSubmit: async ({ email }) => {
+      await forgotPassword({ email });
     },
   });
 
@@ -70,38 +65,8 @@ const ForgotPassword: FC<Props> = ({ setRoute,refetch }) => {
         {errors.email && touched.email && (
           <span className="text-red-500 pt-2 block">{errors.email}</span>
         )}
-        <div className="w-full mt-5 relative mb-1">
-          <label className={`${styles.label}`} htmlFor="email">
-            Enter your password
-          </label>
-          <input
-            type={!show ? "password" : "text"}
-            name="password"
-            value={values.password}
-            onChange={handleChange}
-            id="password"
-            placeholder="password!@%"
-            className={`${
-              errors.password && touched.password && "border-red-500"
-            } ${styles.input}`}
-          />
-          {!show ? (
-            <AiOutlineEyeInvisible
-              className="absolute bottom-3 right-2 z-1 cursor-pointer text-black dark:text-white"
-              size={20}
-              onClick={() => setShow(true)}
-            />
-          ) : (
-            <AiOutlineEye
-              className="absolute bottom-3 right-2 z-1 cursor-pointer text-black dark:text-white"
-              size={20}
-              onClick={() => setShow(false)}
-            />
-          )}
-        </div>
-        {errors.password && touched.password && (
-          <span className="text-red-500 pt-2 block">{errors.password}</span>
-        )}
+        
+        
         <div className="w-full mt-5">
           <input type="submit" value="Verify using OTP" className={`${styles.button}`} />
         </div>
