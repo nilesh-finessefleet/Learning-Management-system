@@ -13,6 +13,7 @@ exports.accessTokenOptions = {
     httpOnly: true,
     sameSite: "none",
     secure: true,
+    domain: "beta.finessefleet.com"
 };
 exports.refreshTokenOptions = {
     expires: new Date(Date.now() + refreshTokenExpire * 24 * 60 * 60 * 1000),
@@ -20,6 +21,7 @@ exports.refreshTokenOptions = {
     httpOnly: true,
     sameSite: "none",
     secure: true,
+    domain: "beta.finessfleet.com"
 };
 const sendToken = (user, statusCode, res) => {
     const accessToken = user.SignAccessToken();
