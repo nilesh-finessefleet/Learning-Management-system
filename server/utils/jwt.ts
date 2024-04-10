@@ -9,7 +9,6 @@ interface ITokenOptions {
   httpOnly: boolean;
   sameSite: "lax" | "strict" | "none" | undefined;
   secure?: boolean;
-  domain: string;
 }
 
 // parse enviroment variables to integrates with fallback values
@@ -29,7 +28,6 @@ export const accessTokenOptions: ITokenOptions = {
   httpOnly: true,
   sameSite: "none",
   secure:true,
-  domain: "beta.finessefleet.com"
 };
 
 export const refreshTokenOptions: ITokenOptions = {
@@ -38,7 +36,6 @@ export const refreshTokenOptions: ITokenOptions = {
   httpOnly: true,
   sameSite: "none",
   secure: true,
-  domain: "beta.finessfleet.com"
 };
 
 export const sendToken = (user: IUser, statusCode: number, res: Response) => {
